@@ -1,144 +1,227 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.app')
 
-    <title>Checkout - BookStore</title>
+@section('title', 'Checkout - BookStore')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+@section('content')
 
-<body class="bg-light">
+<div class="relative overflow-hidden">
 
-<nav class="navbar navbar-expand-lg bg-white border-bottom">
-    <div class="container">
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
 
-        <a
-            class="navbar-brand fw-bold"
-            href="{{ route('home') }}"
-        >
-            📚 BookStore
-        </a>
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        <div class="ms-auto">
+        {{-- Header --}}
+        <div class="mb-8">
 
             <a
                 href="{{ route('cart') }}"
-                class="btn btn-outline-dark btn-sm me-2"
+                class="mb-5 inline-flex items-center gap-2 text-sm text-wood-400 transition hover:text-wood-100"
             >
-                ← Keranjang
+                <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                Kembali ke Keranjang
             </a>
 
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-                class="d-inline"
-            >
-                @csrf
+            <div>
 
-                <button
-                    type="submit"
-                    class="btn btn-outline-danger btn-sm"
-                >
-                    Logout
-                </button>
-            </form>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-400">
+                    Final Step
+                </p>
+
+                <h1 class="mt-1 font-serif text-4xl text-wood-100 md:text-5xl">
+                    Checkout
+                </h1>
+
+                <p class="mt-2 text-sm text-wood-400">
+                    Periksa pesanan kamu sebelum melakukan order.
+                </p>
+
+            </div>
 
         </div>
 
-    </div>
-</nav>
+
+        <div class="grid gap-6 lg:grid-cols-[1fr_360px]">
 
 
-<div class="container py-5">
+            {{-- ORDER ITEMS --}}
+            <section>
 
-    <div class="mb-4">
+                <div class="mb-4 flex items-center gap-2">
 
-        <h2 class="fw-bold mb-1">
-            Checkout
-        </h2>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-terracotta-500/10 text-terracotta-400">
 
-        <p class="text-muted mb-0">
-            Periksa pesanan kamu sebelum melakukan order.
-        </p>
+                        <i
+                            data-lucide="shopping-bag"
+                            class="h-5 w-5"
+                        ></i>
 
-    </div>
+                    </div>
+
+                    <div>
+
+                        <h2 class="font-serif text-xl text-wood-100">
+                            Buku yang Dipesan
+                        </h2>
+
+                        <p class="text-xs text-wood-500">
+                            {{ $cart->items->sum('quantity') }} item dalam pesanan
+                        </p>
+
+                    </div>
+
+                </div>
 
 
-    <div class="row g-4">
+                <div class="space-y-4">
 
-        {{-- Daftar Buku --}}
-        <div class="col-lg-8">
+                    @foreach($cart->items as $item)
 
-            @foreach($cart->items as $item)
+                        @php
+                            $subtotal = $item->book->price * $item->quantity;
+                        @endphp
 
-                @php
-                    $subtotal = $item->book->price * $item->quantity;
-                @endphp
 
-                <div class="card border-0 shadow-sm mb-3">
+                        <article class="rounded-2xl border border-wood-700 bg-wood-900/80 p-4 shadow-shelf-back">
 
-                    <div class="card-body">
+                            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
 
-                        <div class="row align-items-center">
 
-                            <div class="col-3 col-md-2">
+                                {{-- COVER --}}
+                                <div class="shrink-0">
 
-                                @if($item->book->cover)
+                                    @if($item->book->cover)
 
-                                    <img
-                                        src="{{ asset('storage/' . $item->book->cover) }}"
-                                        alt="{{ $item->book->title }}"
-                                        class="img-fluid rounded"
-                                        style="height: 110px; width: 80px; object-fit: cover;"
-                                    >
+                                        <img
+                                            src="{{ asset('storage/' . $item->book->cover) }}"
+                                            alt="{{ $item->book->title }}"
+                                            class="h-32 w-22 rounded-r-lg rounded-l-md object-cover shadow-book-3d"
+                                        >
 
-                                @else
+                                    @else
 
-                                    <div
-                                        class="bg-light rounded d-flex align-items-center justify-content-center"
-                                        style="height: 110px; width: 80px;"
-                                    >
-                                        📖
+                                        <div class="flex h-32 w-22 items-center justify-center rounded-r-lg rounded-l-md bg-wood-800 text-wood-400 shadow-book-3d">
+
+                                            <i
+                                                data-lucide="book-open"
+                                                class="h-8 w-8"
+                                            ></i>
+
+                                        </div>
+
+                                    @endif
+
+                                </div>
+
+
+                                {{-- INFO --}}
+                                <div class="min-w-0 flex-1">
+
+                                    <div class="flex flex-wrap items-start justify-between gap-3">
+
+                                        <div>
+
+                                            <h3 class="font-serif text-xl leading-6 text-wood-100">
+                                                {{ $item->book->title }}
+                                            </h3>
+
+                                            <p class="mt-1 text-sm text-wood-400">
+                                                {{ $item->book->author }}
+                                            </p>
+
+                                        </div>
+
+                                        <span class="rounded-full border border-wood-600 bg-wood-850 px-3 py-1 text-xs text-wood-300">
+                                            {{ $item->quantity }} buku
+                                        </span>
+
                                     </div>
 
-                                @endif
 
-                            </div>
+                                    <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
 
+                                        <div>
 
-                            <div class="col-9 col-md-6">
+                                            <p class="text-xs text-wood-500">
+                                                Harga / buku
+                                            </p>
 
-                                <h5 class="fw-bold mb-1">
-                                    {{ $item->book->title }}
-                                </h5>
+                                            <p class="mt-1 text-sm font-medium text-wood-200">
+                                                Rp {{ number_format($item->book->price, 0, ',', '.') }}
+                                            </p>
 
-                                <p class="text-muted mb-1">
-                                    {{ $item->book->author }}
-                                </p>
-
-                                <small class="text-muted">
-                                    Rp {{ number_format($item->book->price, 0, ',', '.') }}
-                                    ×
-                                    {{ $item->quantity }}
-                                </small>
-
-                            </div>
+                                        </div>
 
 
-                            <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+                                        <div>
 
-                                <small class="text-muted">
-                                    Subtotal
-                                </small>
+                                            <p class="text-xs text-wood-500">
+                                                Jumlah
+                                            </p>
 
-                                <div class="fw-bold text-success">
-                                    Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                            <p class="mt-1 text-sm font-medium text-wood-200">
+                                                {{ $item->quantity }}
+                                            </p>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <p class="text-xs text-wood-500">
+                                                Subtotal
+                                            </p>
+
+                                            <p class="mt-1 text-sm font-semibold text-terracotta-400">
+                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
+
+                            </div>
+
+                        </article>
+
+                    @endforeach
+
+                </div>
+
+            </section>
+
+
+            {{-- SUMMARY --}}
+            <aside>
+
+                <div class="sticky top-24 overflow-hidden rounded-2xl border border-wood-700 bg-wood-900 shadow-shelf-back">
+
+
+                    {{-- Header --}}
+                    <div class="border-b border-wood-700 bg-wood-850 px-6 py-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta-500/10 text-terracotta-400">
+
+                                <i
+                                    data-lucide="receipt"
+                                    class="h-5 w-5"
+                                ></i>
+
+                            </div>
+
+                            <div>
+
+                                <h2 class="font-serif text-xl text-wood-100">
+                                    Ringkasan Pesanan
+                                </h2>
+
+                                <p class="text-xs text-wood-500">
+                                    Pastikan semuanya sudah benar
+                                </p>
 
                             </div>
 
@@ -146,87 +229,122 @@
 
                     </div>
 
-                </div>
 
-            @endforeach
+                    {{-- Summary --}}
+                    <div class="p-6">
 
-        </div>
+                        <div class="flex items-center justify-between">
 
+                            <span class="text-sm text-wood-400">
+                                Total Item
+                            </span>
 
-        {{-- Ringkasan --}}
-        <div class="col-lg-4">
+                            <span class="font-medium text-wood-100">
+                                {{ $cart->items->sum('quantity') }}
+                            </span>
 
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <h4 class="fw-bold mb-4">
-                        Ringkasan Pesanan
-                    </h4>
+                        </div>
 
 
-                    <div class="d-flex justify-content-between mb-3">
+                        <div class="mt-3 flex items-center justify-between">
 
-                        <span class="text-muted">
-                            Total Item
-                        </span>
+                            <span class="text-sm text-wood-400">
+                                Jenis Buku
+                            </span>
 
-                        <span>
-                            {{ $cart->items->sum('quantity') }}
-                        </span>
+                            <span class="font-medium text-wood-100">
+                                {{ $cart->items->count() }}
+                            </span>
 
-                    </div>
-
-
-                    <hr>
+                        </div>
 
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-
-                        <span class="fw-bold">
-                            Total Pembayaran
-                        </span>
-
-                        <span class="fw-bold text-success fs-5">
-                            Rp {{ number_format($total, 0, ',', '.') }}
-                        </span>
-
-                    </div>
+                        <div class="my-6 h-px bg-wood-700"></div>
 
 
-                    <form
-                        action="{{ route('checkout.store') }}"
-                        method="POST"
-                    >
+                        <div>
 
-                        @csrf
+                            <p class="text-sm text-wood-400">
+                                Total Pembayaran
+                            </p>
 
-                        <button
-                            type="submit"
-                            class="btn btn-dark w-100"
+                            <p class="mt-1 text-3xl font-semibold text-terracotta-400">
+                                Rp {{ number_format($total, 0, ',', '.') }}
+                            </p>
+
+                        </div>
+
+
+                        {{-- Confirmation --}}
+                        <div class="mt-6 rounded-xl border border-wood-700 bg-wood-850 p-4">
+
+                            <div class="flex gap-3">
+
+                                <i
+                                    data-lucide="shield-check"
+                                    class="mt-0.5 h-5 w-5 shrink-0 text-green-400"
+                                ></i>
+
+                                <p class="text-xs leading-5 text-wood-400">
+                                    Periksa kembali buku, jumlah, dan total pembayaran sebelum membuat pesanan.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Create Order --}}
+                        <form
+                            action="{{ route('checkout.store') }}"
+                            method="POST"
+                            class="mt-6"
                         >
-                            🛍️ Buat Pesanan
-                        </button>
 
-                    </form>
+                            @csrf
+
+                            <button
+                                type="submit"
+                                class="btn-terracotta inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-semibold"
+                            >
+
+                                <i
+                                    data-lucide="shopping-bag"
+                                    class="h-5 w-5"
+                                ></i>
+
+                                Buat Pesanan
+
+                            </button>
+
+                        </form>
 
 
-                    <a
-                        href="{{ route('cart') }}"
-                        class="btn btn-outline-secondary w-100 mt-2"
-                    >
-                        Kembali ke Keranjang
-                    </a>
+                        {{-- Back --}}
+                        <a
+                            href="{{ route('cart') }}"
+                            class="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-wood-700 bg-wood-850 px-5 py-3 text-sm font-medium text-wood-200 transition hover:bg-wood-800"
+                        >
+
+                            <i
+                                data-lucide="arrow-left"
+                                class="h-4 w-4"
+                            ></i>
+
+                            Kembali ke Keranjang
+
+                        </a>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </aside>
 
         </div>
 
-    </div>
+    </main>
 
 </div>
 
-</body>
-</html>
+@endsection

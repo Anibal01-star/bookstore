@@ -1,270 +1,589 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.admin')
 
-    <title>Data Buku - BookStore Admin</title>
+@section('title', 'Kelola Buku - BookStore')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+@section('page-heading', 'Buku')
 
-<body class="bg-light">
+@section('content')
 
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container">
+<div class="space-y-6">
 
-        <a
-            href="{{ route('admin.dashboard') }}"
-            class="navbar-brand"
-        >
-            BookStore Admin
-        </a>
+    {{-- HEADER --}}
 
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-
-            <button class="btn btn-outline-light btn-sm">
-                Logout
-            </button>
-        </form>
-
-    </div>
-</nav>
-
-<div class="container py-5">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
 
         <div>
-            <h2 class="mb-1">
-                Data Buku
-            </h2>
 
-            <p class="text-muted mb-0">
-                Kelola data buku BookStore
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-400">
+                Catalog
             </p>
+
+            <h1 class="mt-2 font-serif text-3xl font-bold text-wood-100">
+                Koleksi Buku
+            </h1>
+
+            <p class="mt-2 text-sm text-wood-400">
+                Tambahkan, ubah, atau hapus data buku BookStore.
+            </p>
+
         </div>
+
 
         <a
             href="{{ route('books.create') }}"
-            class="btn btn-primary"
+            class="admin-primary"
         >
-            + Tambah Buku
+
+            <i
+                data-lucide="plus"
+                class="h-4 w-4"
+            ></i>
+
+            Tambah Buku
+
         </a>
 
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+
+    {{-- FLASH ERROR --}}
+
+    @if($errors->any())
+
+        <div
+            class="
+                rounded-xl
+                border
+                border-red-500/20
+                bg-red-500/10
+                px-4
+                py-4
+                text-sm
+                text-red-300
+            "
+        >
+
+            <div class="flex items-center gap-2 font-semibold">
+
+                <i
+                    data-lucide="triangle-alert"
+                    class="h-4 w-4"
+                ></i>
+
+                Terdapat kesalahan
+
+            </div>
+
+
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+
+                @foreach($errors->all() as $error)
+
+                    <li>
+                        {{ $error }}
+                    </li>
+
+                @endforeach
+
+            </ul>
+
         </div>
+
     @endif
 
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
+
+    {{-- TABLE CARD --}}
+
+    <div class="admin-card overflow-hidden rounded-2xl">
+
+
+        {{-- TABLE HEADER --}}
+
+        <div
+            class="
+                flex
+                flex-col
+                gap-4
+                border-b
+                border-wood-700/50
+                p-5
+                md:flex-row
+                md:items-center
+                md:justify-between
+            "
+        >
+
+            <div>
+
+                <h2 class="font-serif text-xl text-wood-100">
+                    Daftar Buku
+                </h2>
+
+                <p class="mt-1 text-xs text-wood-500">
+                    {{ $books->count() }} buku tersedia
+                </p>
+
+            </div>
+
+
+            <div class="relative w-full md:w-72">
+
+                <i
+                    data-lucide="search"
+                    class="
+                        pointer-events-none
+                        absolute
+                        left-3
+                        top-1/2
+                        h-4
+                        w-4
+                        -translate-y-1/2
+                        text-wood-500
+                    "
+                ></i>
+
+                <input
+                    type="text"
+                    id="bookSearch"
+                    placeholder="Cari buku..."
+                    class="admin-input pl-10"
+                >
+
+            </div>
+
         </div>
-    @endif
 
-    @if ($books->count())
 
-        <div class="card border-0 shadow-sm">
+        {{-- TABLE --}}
 
-            <div class="card-body p-0">
+        <div class="overflow-x-auto">
 
-                <div class="table-responsive">
+            <table class="admin-table" id="bookTable">
 
-                    <table class="table table-hover align-middle mb-0">
+                <thead>
 
-                        <thead class="table-dark">
+                    <tr>
 
-                            <tr>
+                        <th>
+                            Buku
+                        </th>
 
-                                <th width="60">
-                                    #
-                                </th>
+                        <th>
+                            Kategori
+                        </th>
 
-                                <th width="100">
-                                    Cover
-                                </th>
+                        <th>
+                            Penulis
+                        </th>
 
-                                <th>
-                                    Buku
-                                </th>
+                        <th>
+                            Harga
+                        </th>
 
-                                <th>
-                                    Kategori
-                                </th>
+                        <th>
+                            Stok
+                        </th>
 
-                                <th>
-                                    Harga
-                                </th>
+                        <th class="text-right">
+                            Aksi
+                        </th>
 
-                                <th>
-                                    Stok
-                                </th>
+                    </tr>
 
-                                <th width="180">
-                                    Aksi
-                                </th>
+                </thead>
 
-                            </tr>
 
-                        </thead>
+                <tbody>
 
-                        <tbody>
+                    @forelse($books as $book)
 
-                            @foreach ($books as $book)
+                        <tr>
 
-                                <tr>
 
-                                    <td>
-                                        {{ $loop->iteration }}
-                                    </td>
+                            {{-- BOOK --}}
 
-                                    <td>
+                            <td>
 
-                                        @if ($book->cover)
+                                <div class="flex items-center gap-3">
+
+                                    <div
+                                        class="
+                                            h-14
+                                            w-10
+                                            shrink-0
+                                            overflow-hidden
+                                            rounded-md
+                                            border
+                                            border-wood-600
+                                            bg-wood-800
+                                        "
+                                    >
+
+                                        @if($book->cover)
 
                                             <img
                                                 src="{{ asset('storage/' . $book->cover) }}"
                                                 alt="{{ $book->title }}"
-                                                width="70"
-                                                height="90"
-                                                style="object-fit: cover; border-radius: 8px;"
+                                                class="h-full w-full object-cover"
                                             >
 
                                         @else
 
                                             <div
-                                                class="bg-secondary text-white d-flex align-items-center justify-content-center"
-                                                style="width:70px;height:90px;border-radius:8px;"
+                                                class="
+                                                    flex
+                                                    h-full
+                                                    w-full
+                                                    items-center
+                                                    justify-center
+                                                    text-wood-600
+                                                "
                                             >
-                                                No Cover
+
+                                                <i
+                                                    data-lucide="book-open"
+                                                    class="h-5 w-5"
+                                                ></i>
+
                                             </div>
 
                                         @endif
 
-                                    </td>
+                                    </div>
 
-                                    <td>
 
-                                        <strong>
+                                    <div class="min-w-0">
+
+                                        <p
+                                            class="
+                                                max-w-[220px]
+                                                truncate
+                                                text-sm
+                                                font-semibold
+                                                text-wood-100
+                                            "
+                                        >
                                             {{ $book->title }}
-                                        </strong>
+                                        </p>
 
-                                        <br>
+                                        <p class="mt-1 text-xs text-wood-500">
+                                            ID #{{ $book->id }}
+                                        </p>
 
-                                        <small class="text-muted">
-                                            {{ $book->author }}
-                                        </small>
+                                    </div>
 
-                                    </td>
+                                </div>
 
-                                    <td>
-                                        <span class="badge text-bg-primary">
-                                            {{ $book->category->name }}
-                                        </span>
-                                    </td>
+                            </td>
 
-                                    <td>
-                                        Rp {{ number_format($book->price, 0, ',', '.') }}
-                                    </td>
 
-                                    <td>
+                            {{-- CATEGORY --}}
 
-                                        @if ($book->stock > 0)
+                            <td>
 
-                                            <span class="badge text-bg-success">
-                                                {{ $book->stock }}
-                                            </span>
+                                <span
+                                    class="
+                                        inline-flex
+                                        rounded-full
+                                        border
+                                        border-wood-600
+                                        bg-wood-800
+                                        px-3
+                                        py-1
+                                        text-[11px]
+                                        text-wood-300
+                                    "
+                                >
 
-                                        @else
+                                    {{ $book->category->name ?? '-' }}
 
-                                            <span class="badge text-bg-danger">
-                                                Habis
-                                            </span>
+                                </span>
 
-                                        @endif
+                            </td>
 
-                                    </td>
 
-                                    <td>
+                            {{-- AUTHOR --}}
 
-                                        <a
-                                            href="{{ route('books.edit', $book) }}"
-                                            class="btn btn-warning btn-sm"
+                            <td>
+
+                                <span class="text-wood-300">
+                                    {{ $book->author }}
+                                </span>
+
+                            </td>
+
+
+                            {{-- PRICE --}}
+
+                            <td>
+
+                                <span class="font-semibold text-amberlight">
+
+                                    Rp
+                                    {{ number_format($book->price, 0, ',', '.') }}
+
+                                </span>
+
+                            </td>
+
+
+                            {{-- STOCK --}}
+
+                            <td>
+
+                                @if($book->stock > 10)
+
+                                    <span class="text-emerald-400">
+                                        {{ $book->stock }}
+                                    </span>
+
+                                @elseif($book->stock > 0)
+
+                                    <span class="text-amberlight">
+                                        {{ $book->stock }}
+                                    </span>
+
+                                @else
+
+                                    <span class="text-red-400">
+                                        Habis
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- ACTION --}}
+
+                            <td>
+
+                                <div class="flex justify-end gap-2">
+
+
+                                    {{-- DETAIL --}}
+
+                                    <a
+                                        href="{{ route('book.detail', $book) }}"
+                                        target="_blank"
+                                        class="
+                                            inline-flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            border
+                                            border-wood-600
+                                            bg-wood-800
+                                            text-wood-400
+                                            transition
+                                            hover:border-wood-500
+                                            hover:text-wood-100
+                                        "
+                                        title="Lihat"
+                                    >
+
+                                        <i
+                                            data-lucide="eye"
+                                            class="h-4 w-4"
+                                        ></i>
+
+                                    </a>
+
+
+                                    {{-- EDIT --}}
+
+                                    <a
+                                        href="{{ route('books.edit', $book) }}"
+                                        class="
+                                            inline-flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            border
+                                            border-wood-600
+                                            bg-wood-800
+                                            text-amberlight
+                                            transition
+                                            hover:border-amberlight/40
+                                        "
+                                        title="Edit"
+                                    >
+
+                                        <i
+                                            data-lucide="pencil"
+                                            class="h-4 w-4"
+                                        ></i>
+
+                                    </a>
+
+
+                                    {{-- DELETE --}}
+
+                                    <form
+                                        action="{{ route('books.destroy', $book) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus buku ini?')"
+                                    >
+
+                                        @csrf
+
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="
+                                                inline-flex
+                                                h-9
+                                                w-9
+                                                items-center
+                                                justify-center
+                                                rounded-lg
+                                                border
+                                                border-red-500/20
+                                                bg-red-500/5
+                                                text-red-400
+                                                transition
+                                                hover:border-red-500/40
+                                                hover:bg-red-500/10
+                                            "
+                                            title="Hapus"
                                         >
-                                            Edit
-                                        </a>
 
-                                        <form
-                                            action="{{ route('books.destroy', $book) }}"
-                                            method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Yakin ingin menghapus buku ini?')"
-                                        >
+                                            <i
+                                                data-lucide="trash-2"
+                                                class="h-4 w-4"
+                                            ></i>
 
-                                            @csrf
-                                            @method('DELETE')
+                                        </button>
 
-                                            <button
-                                                type="submit"
-                                                class="btn btn-danger btn-sm"
-                                            >
-                                                Hapus
-                                            </button>
+                                    </form>
 
-                                        </form>
+                                </div>
 
-                                    </td>
+                            </td>
 
-                                </tr>
+                        </tr>
 
-                            @endforeach
+                    @empty
 
-                        </tbody>
+                        <tr>
 
-                    </table>
+                            <td
+                                colspan="6"
+                                class="py-16 text-center"
+                            >
 
-                </div>
+                                <div
+                                    class="
+                                        mx-auto
+                                        flex
+                                        h-14
+                                        w-14
+                                        items-center
+                                        justify-center
+                                        rounded-2xl
+                                        border
+                                        border-wood-700
+                                        bg-wood-850
+                                        text-wood-500
+                                    "
+                                >
 
-            </div>
+                                    <i
+                                        data-lucide="book-open"
+                                        class="h-6 w-6"
+                                    ></i>
+
+                                </div>
+
+                                <p class="mt-4 font-serif text-lg text-wood-200">
+                                    Belum ada buku
+                                </p>
+
+                                <p class="mt-1 text-sm text-wood-500">
+                                    Tambahkan buku pertama ke koleksi BookStore.
+                                </p>
+
+                                <a
+                                    href="{{ route('books.create') }}"
+                                    class="admin-primary mt-5"
+                                >
+
+                                    <i
+                                        data-lucide="plus"
+                                        class="h-4 w-4"
+                                    ></i>
+
+                                    Tambah Buku
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
 
         </div>
 
-    @else
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body text-center py-5">
-
-                <h5>
-                    Belum ada buku
-                </h5>
-
-                <p class="text-muted">
-                    Silakan tambahkan data buku terlebih dahulu.
-                </p>
-
-                <a
-                    href="{{ route('books.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Tambah Buku
-                </a>
-
-            </div>
-
-        </div>
-
-    @endif
+    </div>
 
 </div>
 
-</body>
-</html>
+
+{{-- SEARCH --}}
+
+@push('scripts')
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const searchInput =
+            document.getElementById('bookSearch');
+
+        const rows =
+            document.querySelectorAll('#bookTable tbody tr');
+
+
+        if (!searchInput) {
+            return;
+        }
+
+
+        searchInput.addEventListener('input', function () {
+
+            const keyword =
+                this.value.toLowerCase().trim();
+
+
+            rows.forEach(function (row) {
+
+                const text =
+                    row.textContent.toLowerCase();
+
+
+                row.style.display =
+                    text.includes(keyword)
+                        ? ''
+                        : 'none';
+
+            });
+
+        });
+
+    });
+
+</script>
+
+@endpush
+
+@endsection

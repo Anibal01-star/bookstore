@@ -1,116 +1,539 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - BookStore</title>
+@extends('layouts.app')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Register - BookStore')
 
-    <style>
-        body {
-            background: #f5f7fb;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+@section('content')
 
-        .auth-card {
-            width: 100%;
-            max-width: 430px;
-            background: white;
-            border-radius: 16px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.08);
-        }
+<div class="relative flex min-h-[calc(100vh-76px)] items-center justify-center overflow-hidden px-4 py-12">
 
-        .brand {
-            font-weight: 700;
-            font-size: 28px;
-        }
-    </style>
-</head>
+    {{-- BACKGROUND GLOW --}}
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
 
-<body>
 
-<div class="auth-card">
+    <div class="relative z-10 w-full max-w-md">
 
-    <div class="text-center mb-4">
-        <div class="brand">BookStore</div>
-        <p class="text-muted mb-0">Buat akun baru</p>
-    </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        {{-- ================================================= --}}
+        {{-- BRAND --}}
+        {{-- ================================================= --}}
 
-    <form action="{{ url('/register') }}" method="POST">
-        @csrf
+        <div class="mb-8 text-center">
 
-        <div class="mb-3">
-            <label class="form-label">Nama</label>
-            <input
-                type="text"
-                name="name"
-                class="form-control"
-                value="{{ old('name') }}"
-                placeholder="Masukkan nama"
-                required
+            <div
+                class="
+                    mx-auto flex h-16 w-16
+                    items-center justify-center
+                    rounded-2xl
+                    border border-wood-600
+                    bg-wood-900
+                    text-terracotta-400
+                    shadow-shelf-back
+                "
             >
-        </div>
 
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input
-                type="email"
-                name="email"
-                class="form-control"
-                value="{{ old('email') }}"
-                placeholder="Masukkan email"
-                required
+                <i
+                    data-lucide="book-open"
+                    class="h-8 w-8"
+                ></i>
+
+            </div>
+
+
+            <p
+                class="
+                    mt-5
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-[0.25em]
+                    text-terracotta-400
+                "
             >
-        </div>
+                Start Your Journey
+            </p>
 
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input
-                type="password"
-                name="password"
-                class="form-control"
-                placeholder="Minimal 6 karakter"
-                required
+
+            <h1
+                class="
+                    mt-2
+                    font-serif
+                    text-4xl
+                    text-wood-100
+                "
             >
-        </div>
+                Buat Akun
+            </h1>
 
-        <div class="mb-3">
-            <label class="form-label">Konfirmasi Password</label>
-            <input
-                type="password"
-                name="password_confirmation"
-                class="form-control"
-                placeholder="Ulangi password"
-                required
+
+            <p
+                class="
+                    mt-2
+                    text-sm
+                    text-wood-400
+                "
             >
+                Buat akun baru untuk mulai menjelajahi BookStore.
+            </p>
+
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">
-            Daftar
-        </button>
-    </form>
 
-    <div class="text-center mt-4">
-        <span class="text-muted">Sudah punya akun?</span>
-        <a href="{{ route('login') }}">Login</a>
+        {{-- ================================================= --}}
+        {{-- REGISTER CARD --}}
+        {{-- ================================================= --}}
+
+        <div
+            class="
+                rounded-2xl
+                border border-wood-700
+                bg-wood-900/90
+                p-6
+                shadow-shelf-back
+                sm:p-8
+            "
+        >
+
+
+            {{-- ================================================= --}}
+            {{-- ERROR --}}
+            {{-- ================================================= --}}
+
+            @if($errors->any())
+
+                <div
+                    class="
+                        mb-5
+                        rounded-xl
+                        border border-red-700/50
+                        bg-red-950/40
+                        px-4 py-4
+                        text-sm
+                        text-red-300
+                    "
+                >
+
+                    <div class="flex items-center gap-2 font-medium">
+
+                        <i
+                            data-lucide="triangle-alert"
+                            class="h-5 w-5"
+                        ></i>
+
+                        Pendaftaran gagal
+
+                    </div>
+
+
+                    <ul class="mt-2 list-disc space-y-1 pl-6">
+
+                        @foreach($errors->all() as $error)
+
+                            <li>
+                                {{ $error }}
+                            </li>
+
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+            @endif
+
+
+            {{-- ================================================= --}}
+            {{-- REGISTER FORM --}}
+            {{-- ================================================= --}}
+
+            <form
+                action="{{ route('register') }}"
+                method="POST"
+                class="space-y-5"
+            >
+
+                @csrf
+
+
+                {{-- NAME --}}
+
+                <div>
+
+                    <label
+                        for="name"
+                        class="
+                            mb-2
+                            block
+                            text-sm
+                            font-medium
+                            text-wood-200
+                        "
+                    >
+                        Nama
+                    </label>
+
+
+                    <div class="relative">
+
+                        <i
+                            data-lucide="user"
+                            class="
+                                pointer-events-none
+                                absolute
+                                left-4
+                                top-1/2
+                                h-4 w-4
+                                -translate-y-1/2
+                                text-wood-500
+                            "
+                        ></i>
+
+
+                        <input
+                            id="name"
+                            type="text"
+                            name="name"
+                            value="{{ old('name') }}"
+                            placeholder="Masukkan nama"
+                            required
+                            autofocus
+                            autocomplete="name"
+                            class="
+                                bookstore-input
+                                w-full
+                                rounded-xl
+                                border border-wood-700
+                                bg-wood-850
+                                py-3
+                                pl-11
+                                pr-4
+                                text-sm
+                                text-wood-100
+                                placeholder-wood-500
+                                outline-none
+                                transition
+                                focus:border-terracotta-400
+                                focus:ring-1
+                                focus:ring-terracotta-400
+                            "
+                        >
+
+                    </div>
+
+                </div>
+
+
+                {{-- EMAIL --}}
+
+                <div>
+
+                    <label
+                        for="email"
+                        class="
+                            mb-2
+                            block
+                            text-sm
+                            font-medium
+                            text-wood-200
+                        "
+                    >
+                        Email
+                    </label>
+
+
+                    <div class="relative">
+
+                        <i
+                            data-lucide="mail"
+                            class="
+                                pointer-events-none
+                                absolute
+                                left-4
+                                top-1/2
+                                h-4 w-4
+                                -translate-y-1/2
+                                text-wood-500
+                            "
+                        ></i>
+
+
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            placeholder="Masukkan email"
+                            required
+                            autocomplete="email"
+                            class="
+                                bookstore-input
+                                w-full
+                                rounded-xl
+                                border border-wood-700
+                                bg-wood-850
+                                py-3
+                                pl-11
+                                pr-4
+                                text-sm
+                                text-wood-100
+                                placeholder-wood-500
+                                outline-none
+                                transition
+                                focus:border-terracotta-400
+                                focus:ring-1
+                                focus:ring-terracotta-400
+                            "
+                        >
+
+                    </div>
+
+                </div>
+
+
+                {{-- PASSWORD --}}
+
+                <div>
+
+                    <label
+                        for="password"
+                        class="
+                            mb-2
+                            block
+                            text-sm
+                            font-medium
+                            text-wood-200
+                        "
+                    >
+                        Password
+                    </label>
+
+
+                    <div class="relative">
+
+                        <i
+                            data-lucide="lock"
+                            class="
+                                pointer-events-none
+                                absolute
+                                left-4
+                                top-1/2
+                                h-4 w-4
+                                -translate-y-1/2
+                                text-wood-500
+                            "
+                        ></i>
+
+
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            placeholder="Minimal 6 karakter"
+                            required
+                            autocomplete="new-password"
+                            class="
+                                bookstore-input
+                                w-full
+                                rounded-xl
+                                border border-wood-700
+                                bg-wood-850
+                                py-3
+                                pl-11
+                                pr-4
+                                text-sm
+                                text-wood-100
+                                placeholder-wood-500
+                                outline-none
+                                transition
+                                focus:border-terracotta-400
+                                focus:ring-1
+                                focus:ring-terracotta-400
+                            "
+                        >
+
+                    </div>
+
+                </div>
+
+
+                {{-- CONFIRM PASSWORD --}}
+
+                <div>
+
+                    <label
+                        for="password_confirmation"
+                        class="
+                            mb-2
+                            block
+                            text-sm
+                            font-medium
+                            text-wood-200
+                        "
+                    >
+                        Konfirmasi Password
+                    </label>
+
+
+                    <div class="relative">
+
+                        <i
+                            data-lucide="shield-check"
+                            class="
+                                pointer-events-none
+                                absolute
+                                left-4
+                                top-1/2
+                                h-4 w-4
+                                -translate-y-1/2
+                                text-wood-500
+                            "
+                        ></i>
+
+
+                        <input
+                            id="password_confirmation"
+                            type="password"
+                            name="password_confirmation"
+                            placeholder="Ulangi password"
+                            required
+                            autocomplete="new-password"
+                            class="
+                                bookstore-input
+                                w-full
+                                rounded-xl
+                                border border-wood-700
+                                bg-wood-850
+                                py-3
+                                pl-11
+                                pr-4
+                                text-sm
+                                text-wood-100
+                                placeholder-wood-500
+                                outline-none
+                                transition
+                                focus:border-terracotta-400
+                                focus:ring-1
+                                focus:ring-terracotta-400
+                            "
+                        >
+
+                    </div>
+
+                </div>
+
+
+                {{-- ================================================= --}}
+                {{-- REGISTER BUTTON --}}
+                {{-- ================================================= --}}
+
+                <button
+                    type="submit"
+                    class="
+                        btn-terracotta
+                        inline-flex
+                        w-full
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-xl
+                        px-5
+                        py-3.5
+                        font-semibold
+                    "
+                >
+
+                    <i
+                        data-lucide="user-plus"
+                        class="h-5 w-5"
+                    ></i>
+
+                    Daftar
+
+                </button>
+
+            </form>
+
+
+            {{-- ================================================= --}}
+            {{-- LOGIN --}}
+            {{-- ================================================= --}}
+
+            <div
+                class="
+                    mt-6
+                    border-t
+                    border-wood-700
+                    pt-6
+                    text-center
+                "
+            >
+
+                <p class="text-sm text-wood-500">
+                    Sudah punya akun?
+                </p>
+
+
+                <a
+                    href="{{ route('login') }}"
+                    class="
+                        mt-2
+                        inline-flex
+                        items-center
+                        gap-2
+                        text-sm
+                        font-semibold
+                        text-terracotta-400
+                        transition
+                        hover:text-terracotta-300
+                    "
+                >
+
+                    Login sekarang
+
+                    <i
+                        data-lucide="arrow-right"
+                        class="h-4 w-4"
+                    ></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {{-- ================================================= --}}
+        {{-- BACK HOME --}}
+        {{-- ================================================= --}}
+
+        <div class="mt-5 text-center">
+
+            <a
+                href="{{ route('home') }}"
+                class="
+                    inline-flex
+                    items-center
+                    gap-2
+                    text-sm
+                    text-wood-500
+                    transition
+                    hover:text-wood-300
+                "
+            >
+
+                <i
+                    data-lucide="arrow-left"
+                    class="h-4 w-4"
+                ></i>
+
+                Kembali ke Home
+
+            </a>
+
+        </div>
+
     </div>
 
 </div>
 
-</body>
-</html>
+@endsection

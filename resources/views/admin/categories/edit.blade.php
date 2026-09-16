@@ -1,118 +1,161 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.admin')
 
-    <title>Edit Kategori - BookStore</title>
+@section('title', 'Edit Kategori - BookStore')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+@section('page-heading', 'Edit Kategori')
 
-<body class="bg-light">
+@section('content')
 
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container">
+<div class="max-w-2xl mx-auto">
 
+    {{-- Header --}}
+    <div class="flex items-center gap-3 mb-6">
         <a
             href="{{ route('categories.index') }}"
-            class="navbar-brand"
+            class="admin-secondary inline-flex items-center gap-2"
         >
-            BookStore Admin
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Kembali
         </a>
-
     </div>
-</nav>
 
-<div class="container py-5">
+    {{-- Validation Error --}}
+    @if ($errors->any())
+        <div class="admin-card mb-6 border border-red-400/30">
+            <div class="flex items-start gap-3">
+                <i
+                    data-lucide="circle-alert"
+                    class="w-5 h-5 text-red-400 mt-0.5 shrink-0"
+                ></i>
 
-    <div
-        class="card border-0 shadow-sm mx-auto"
-        style="max-width: 650px;"
-    >
+                <div>
+                    <h3 class="text-sm font-semibold text-red-300 mb-2">
+                        Terdapat kesalahan
+                    </h3>
 
-        <div class="card-body p-4">
-
-            <h3 class="mb-4">
-                Edit Kategori
-            </h3>
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
+                    <ul class="space-y-1 text-sm text-red-200">
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <li>• {{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            </div>
+        </div>
+    @endif
 
-            <form
-                action="{{ route('categories.update', $category) }}"
-                method="POST"
-            >
+    {{-- Form Card --}}
+    <div class="admin-card">
 
-                @csrf
-                @method('PUT')
+        <div class="mb-8">
+            <div class="flex items-center gap-3 mb-2">
 
-                <div class="mb-3">
+                <div class="w-10 h-10 rounded-xl bg-[#d76239]/15 flex items-center justify-center">
+                    <i
+                        data-lucide="folder-pen"
+                        class="w-5 h-5 text-[#e57a53]"
+                    ></i>
+                </div>
 
-                    <label class="form-label">
-                        Nama Kategori
-                    </label>
+                <div>
+                    <h2 class="text-xl font-semibold text-[#f5ebe2]">
+                        Edit Kategori
+                    </h2>
+
+                    <p class="text-sm text-[#b07b53]">
+                        Perbarui informasi kategori buku.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <form
+            action="{{ route('categories.update', $category) }}"
+            method="POST"
+            class="space-y-6"
+        >
+
+            @csrf
+            @method('PUT')
+
+            {{-- Nama Kategori --}}
+            <div>
+                <label
+                    for="name"
+                    class="block text-sm font-medium text-[#dfc2a6] mb-2"
+                >
+                    Nama Kategori
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        data-lucide="tag"
+                        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#895a3a]"
+                    ></i>
 
                     <input
                         type="text"
+                        id="name"
                         name="name"
-                        class="form-control"
                         value="{{ old('name', $category->name) }}"
+                        class="admin-input pl-10"
+                        placeholder="Contoh: Fiksi"
                         required
                     >
 
                 </div>
+            </div>
 
-                <div class="mb-4">
+            {{-- Deskripsi --}}
+            <div>
 
-                    <label class="form-label">
-                        Deskripsi
-                    </label>
+                <label
+                    for="description"
+                    class="block text-sm font-medium text-[#dfc2a6] mb-2"
+                >
+                    Deskripsi
+                </label>
 
-                    <textarea
-                        name="description"
-                        class="form-control"
-                        rows="4"
-                    >{{ old('description', $category->description) }}</textarea>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    class="admin-input resize-none"
+                    placeholder="Deskripsi kategori..."
+                >{{ old('description', $category->description) }}</textarea>
 
-                </div>
+                <p class="mt-2 text-xs text-[#895a3a]">
+                    Perbarui deskripsi kategori jika diperlukan.
+                </p>
 
-                <div class="d-flex gap-2">
+            </div>
 
-                    <a
-                        href="{{ route('categories.index') }}"
-                        class="btn btn-secondary"
-                    >
-                        Kembali
-                    </a>
+            {{-- Actions --}}
+            <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[#67422b]/30">
 
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Update Kategori
-                    </button>
+                <a
+                    href="{{ route('categories.index') }}"
+                    class="admin-secondary inline-flex items-center justify-center gap-2"
+                >
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                    Batal
+                </a>
 
-                </div>
+                <button
+                    type="submit"
+                    class="admin-primary inline-flex items-center justify-center gap-2"
+                >
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    Update Kategori
+                </button>
 
-            </form>
+            </div>
 
-        </div>
+        </form>
 
     </div>
 
 </div>
 
-</body>
-</html>
+@endsection

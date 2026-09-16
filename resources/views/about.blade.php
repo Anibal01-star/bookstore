@@ -1,390 +1,306 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'About Us - BookStore')
 
-    <title>Riwayat Pesanan - BookStore</title>
+@section('content')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+<div class="relative overflow-hidden">
 
-    <style>
-        body {
-            background: #f5f7fb;
-        }
+    {{-- BACKGROUND GLOW --}}
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
 
-        .navbar {
-            background: #111827;
-        }
+    <main class="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
 
-        .navbar-brand {
-            font-weight: 700;
-        }
-
-        .page-header {
-            margin-top: 40px;
-            margin-bottom: 30px;
-        }
-
-        .order-card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-
-        .order-header {
-            background: #fafafa;
-            border-bottom: 1px solid #eee;
-            padding: 20px 24px;
-        }
-
-        .order-body {
-            padding: 24px;
-        }
-
-        .book-cover {
-            width: 60px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 7px;
-            background: #f1f1f1;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 8px 14px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-processing {
-            background: #cfe2ff;
-            color: #084298;
-        }
-
-        .status-completed {
-            background: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .status-cancelled {
-            background: #f8d7da;
-            color: #842029;
-        }
-
-        .empty-card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
-        }
-    </style>
-</head>
-
-<body>
-
-<nav class="navbar navbar-dark">
-    <div class="container">
-
+        {{-- BACK --}}
         <a
-            class="navbar-brand"
             href="{{ route('home') }}"
+            class="mb-6 inline-flex items-center gap-2 text-sm text-wood-400 transition hover:text-wood-100"
         >
-            BookStore
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>
+            Kembali ke Home
         </a>
 
-        <div class="d-flex align-items-center gap-3">
 
-            <a
-                href="{{ route('home') }}"
-                class="text-white text-decoration-none"
-            >
-                Home
-            </a>
+        {{-- HERO --}}
+        <section class="relative overflow-hidden rounded-3xl border border-wood-700 bg-wood-900/90 px-6 py-12 shadow-shelf-back sm:px-10 md:py-16">
 
-            <a
-                href="{{ route('about') }}"
-                class="text-white text-decoration-none"
-            >
-                About
-            </a>
+            <div class="warm-light absolute -right-20 -top-20 h-48 w-48 rounded-full"></div>
 
-            <a
-                href="{{ route('contact') }}"
-                class="text-white text-decoration-none"
-            >
-                Contact
-            </a>
+            <div class="relative z-10 max-w-3xl">
 
-            <a
-                href="{{ route('cart') }}"
-                class="text-white text-decoration-none"
-            >
-                Cart
-            </a>
+                <p class="text-xs font-semibold uppercase tracking-[0.25em] text-terracotta-400">
+                    About BookStore
+                </p>
 
-            <a
-                href="{{ route('orders.index') }}"
-                class="text-white text-decoration-none fw-bold"
-            >
-                Pesanan
-            </a>
+                <h1 class="mt-3 font-serif text-4xl leading-tight text-wood-100 sm:text-5xl md:text-6xl">
+                    Tempat untuk
+                    <span class="text-terracotta-400">
+                        Menemukan Cerita
+                    </span>
+                </h1>
 
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-                class="d-inline"
-            >
-                @csrf
+                <p class="mt-5 max-w-2xl text-sm leading-7 text-wood-400 sm:text-base">
+                    BookStore adalah platform toko buku sederhana yang membantu
+                    kamu menemukan, menjelajahi, dan memesan berbagai koleksi
+                    buku dalam satu tempat.
+                </p>
 
-                <button
-                    type="submit"
-                    class="btn btn-outline-light btn-sm"
-                >
-                    Logout
-                </button>
+            </div>
 
-            </form>
-
-        </div>
-
-    </div>
-</nav>
+        </section>
 
 
-<div class="container">
+        {{-- ABOUT CONTENT --}}
+        <section class="mt-8 grid gap-6 lg:grid-cols-3">
 
-    <div class="page-header">
+            {{-- DESCRIPTION --}}
+            <div class="rounded-2xl border border-wood-700 bg-wood-900/85 p-6 shadow-shelf-back sm:p-8 lg:col-span-2">
 
-        <h2 class="fw-bold mb-1">
-            Riwayat Pesanan
-        </h2>
+                <div class="mb-5 flex items-center gap-3">
 
-        <p class="text-muted mb-0">
-            Lihat pesanan dan status pemesanan buku kamu.
-        </p>
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-terracotta-500/10 text-terracotta-400">
 
-    </div>
+                        <i
+                            data-lucide="library"
+                            class="h-5 w-5"
+                        ></i>
 
+                    </div>
 
-    @if(session('success'))
+                    <div>
 
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-terracotta-400">
+                            Tentang Kami
+                        </p>
 
-    @endif
+                        <h2 class="font-serif text-2xl text-wood-100">
+                            Mengenal BookStore
+                        </h2>
 
+                    </div>
 
-    @if($orders->isEmpty())
-
-        <div class="card empty-card">
-
-            <div class="card-body text-center py-5">
-
-                <div
-                    style="font-size: 50px;"
-                    class="mb-3"
-                >
-                    📦
                 </div>
 
-                <h5 class="fw-bold">
-                    Belum Ada Pesanan
-                </h5>
+                <div class="space-y-4 text-sm leading-7 text-wood-400">
 
-                <p class="text-muted">
-                    Kamu belum memiliki riwayat pesanan.
+                    <p>
+                        BookStore merupakan aplikasi toko buku berbasis web
+                        yang dirancang untuk memberikan pengalaman berbelanja
+                        buku secara sederhana dan nyaman.
+                    </p>
+
+                    <p>
+                        Pengguna dapat melihat koleksi buku, mencari buku
+                        berdasarkan judul atau penulis, melihat detail buku,
+                        menambahkan buku ke keranjang, hingga melakukan
+                        pemesanan.
+                    </p>
+
+                    <p>
+                        Setiap buku memiliki cerita dan pengalaman yang berbeda.
+                        BookStore hadir sebagai ruang sederhana untuk membantu
+                        kamu menemukan buku yang sesuai dengan minatmu.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- SIDE CARD --}}
+            <div class="rounded-2xl border border-wood-700 bg-wood-900/85 p-6 shadow-shelf-back sm:p-8">
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-terracotta-500/10 text-terracotta-400">
+
+                    <i
+                        data-lucide="book-open"
+                        class="h-6 w-6"
+                    ></i>
+
+                </div>
+
+                <h2 class="mt-5 font-serif text-2xl text-wood-100">
+                    Your Personal Shelf
+                </h2>
+
+                <p class="mt-3 text-sm leading-6 text-wood-400">
+                    Jelajahi berbagai buku dan temukan cerita yang ingin
+                    kamu bawa pulang.
                 </p>
 
                 <a
                     href="{{ route('home') }}"
-                    class="btn btn-dark"
+                    class="btn-terracotta mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold"
                 >
-                    Mulai Belanja
+
+                    <i
+                        data-lucide="search"
+                        class="h-5 w-5"
+                    ></i>
+
+                    Jelajahi Buku
+
                 </a>
 
             </div>
 
-        </div>
-
-    @else
-
-        @foreach($orders as $order)
-
-            <div class="card order-card">
-
-                {{-- HEADER ORDER --}}
-                <div class="order-header">
-
-                    <div class="row align-items-center">
-
-                        <div class="col-md-6">
-
-                            <div class="text-muted small mb-1">
-                                Pesanan #{{ $order->id }}
-                            </div>
-
-                            <div class="fw-semibold">
-                                {{ $order->created_at->format('d M Y, H:i') }}
-                            </div>
-
-                        </div>
+        </section>
 
 
-                        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        {{-- FEATURES --}}
+        <section class="mt-10">
 
-                            {{-- STATUS --}}
-                            @if($order->status === 'pending')
+            <div class="mb-5">
 
-                                <span class="status-badge status-pending">
-                                    ⏳ Menunggu Konfirmasi
-                                </span>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-400">
+                    Fitur BookStore
+                </p>
 
-                            @elseif($order->status === 'processing')
+                <h2 class="mt-1 font-serif text-3xl text-wood-100">
+                    Semua dalam Satu Rak
+                </h2>
 
-                                <span class="status-badge status-processing">
-                                    🚚 Sedang Diproses
-                                </span>
+            </div>
 
-                            @elseif($order->status === 'completed')
 
-                                <span class="status-badge status-completed">
-                                    ✓ Pesanan Selesai
-                                </span>
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-                            @elseif($order->status === 'cancelled')
+                {{-- SEARCH --}}
+                <div class="rounded-2xl border border-wood-700 bg-wood-900/85 p-5 shadow-shelf-back transition hover:-translate-y-1">
 
-                                <span class="status-badge status-cancelled">
-                                    ✕ Pesanan Dibatalkan
-                                </span>
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-wood-850 text-terracotta-400">
 
-                            @else
-
-                                <span class="status-badge bg-secondary text-white">
-                                    {{ ucfirst($order->status) }}
-                                </span>
-
-                            @endif
-
-                        </div>
+                        <i
+                            data-lucide="search"
+                            class="h-5 w-5"
+                        ></i>
 
                     </div>
+
+                    <h3 class="mt-4 font-serif text-xl text-wood-100">
+                        Cari Buku
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-wood-500">
+                        Cari buku berdasarkan judul atau nama penulis.
+                    </p>
 
                 </div>
 
 
-                {{-- BODY ORDER --}}
-                <div class="order-body">
+                {{-- CART --}}
+                <div class="rounded-2xl border border-wood-700 bg-wood-900/85 p-5 shadow-shelf-back transition hover:-translate-y-1">
 
-                    <h6 class="fw-bold mb-3">
-                        Buku yang Dipesan
-                    </h6>
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-wood-850 text-terracotta-400">
 
-
-                    @foreach($order->items as $item)
-
-                        <div class="d-flex align-items-center gap-3 border-bottom py-3">
-
-                            {{-- COVER --}}
-                            @if($item->book->cover)
-
-                                <img
-                                    src="{{ asset('storage/' . $item->book->cover) }}"
-                                    class="book-cover"
-                                    alt="{{ $item->book->title }}"
-                                >
-
-                            @else
-
-                                <div
-                                    class="book-cover d-flex align-items-center justify-content-center"
-                                >
-                                    📚
-                                </div>
-
-                            @endif
-
-
-                            {{-- BOOK INFO --}}
-                            <div class="flex-grow-1">
-
-                                <div class="fw-semibold">
-                                    {{ $item->book->title }}
-                                </div>
-
-                                <div class="text-muted small">
-                                    {{ $item->quantity }} ×
-                                    Rp {{ number_format($item->price, 0, ',', '.') }}
-                                </div>
-
-                            </div>
-
-
-                            {{-- SUBTOTAL --}}
-                            <div class="fw-semibold">
-
-                                Rp
-                                {{ number_format($item->subtotal, 0, ',', '.') }}
-
-                            </div>
-
-                        </div>
-
-                    @endforeach
-
-
-                    {{-- TOTAL --}}
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-
-                        <div>
-
-                            <div class="text-muted small">
-                                Total Pesanan
-                            </div>
-
-                            <div class="fs-5 fw-bold">
-                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                            </div>
-
-                        </div>
-
-
-                        <a
-                            href="{{ route('orders.show', $order) }}"
-                            class="btn btn-outline-dark"
-                        >
-                            Lihat Detail
-                        </a>
+                        <i
+                            data-lucide="shopping-cart"
+                            class="h-5 w-5"
+                        ></i>
 
                     </div>
+
+                    <h3 class="mt-4 font-serif text-xl text-wood-100">
+                        Keranjang
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-wood-500">
+                        Simpan buku pilihanmu sebelum melakukan pemesanan.
+                    </p>
+
+                </div>
+
+
+                {{-- ORDER --}}
+                <div class="rounded-2xl border border-wood-700 bg-wood-900/85 p-5 shadow-shelf-back transition hover:-translate-y-1">
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-wood-850 text-terracotta-400">
+
+                        <i
+                            data-lucide="receipt"
+                            class="h-5 w-5"
+                        ></i>
+
+                    </div>
+
+                    <h3 class="mt-4 font-serif text-xl text-wood-100">
+                        Pesanan
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-wood-500">
+                        Lihat detail dan status pesanan yang telah dibuat.
+                    </p>
+
+                </div>
+
+
+                {{-- CONTACT --}}
+                <div class="rounded-2xl border border-wood-700 bg-wood-900/85 p-5 shadow-shelf-back transition hover:-translate-y-1">
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-wood-850 text-terracotta-400">
+
+                        <i
+                            data-lucide="message-circle"
+                            class="h-5 w-5"
+                        ></i>
+
+                    </div>
+
+                    <h3 class="mt-4 font-serif text-xl text-wood-100">
+                        Contact Admin
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-wood-500">
+                        Hubungi admin apabila membutuhkan bantuan.
+                    </p>
 
                 </div>
 
             </div>
 
-        @endforeach
+        </section>
 
-    @endif
+
+        {{-- CTA --}}
+        <section class="mt-10 overflow-hidden rounded-2xl border border-wood-700 bg-wood-850 px-6 py-10 text-center shadow-shelf-back sm:px-10">
+
+            <div class="mx-auto max-w-2xl">
+
+                <i
+                    data-lucide="quote"
+                    class="mx-auto h-7 w-7 text-terracotta-400"
+                ></i>
+
+                <p class="mt-4 font-serif text-2xl leading-relaxed text-wood-100 sm:text-3xl">
+                    “Satu buku dapat membuka pintu menuju
+                    dunia yang berbeda.”
+                </p>
+
+                <p class="mt-4 text-sm text-wood-500">
+                    Temukan cerita berikutnya bersama BookStore.
+                </p>
+
+                <a
+                    href="{{ route('home') }}"
+                    class="btn-terracotta mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+                >
+
+                    Mulai Menjelajah
+
+                    <i
+                        data-lucide="arrow-right"
+                        class="h-5 w-5"
+                    ></i>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
-
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-</script>
-
-</body>
-
-</html>
+@endsection

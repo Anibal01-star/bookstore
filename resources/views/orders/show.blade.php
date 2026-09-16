@@ -1,210 +1,389 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.app')
 
-    <title>Detail Pesanan - BookStore</title>
+@section('title', 'Detail Pesanan - BookStore')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+@section('content')
 
-<body class="bg-light">
+<div class="relative overflow-hidden">
 
-<nav class="navbar navbar-expand-lg bg-white border-bottom">
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
 
-    <div class="container">
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
+        {{-- BACK --}}
         <a
-            class="navbar-brand fw-bold"
-            href="{{ route('home') }}"
+            href="{{ route('orders.index') }}"
+            class="mb-5 inline-flex items-center gap-2 text-sm text-wood-400 transition hover:text-wood-100"
         >
-            📚 BookStore
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>
+            Kembali ke Pesanan Saya
         </a>
 
-        <div class="ms-auto">
 
-            <a
-                href="{{ route('orders.index') }}"
-                class="btn btn-outline-dark btn-sm me-2"
-            >
-                ← Pesanan Saya
-            </a>
+        <!-- {{-- SUCCESS --}}
+        @if(session('success'))
 
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-                class="d-inline"
-            >
-                @csrf
+            <div class="alert-message mb-6 flex items-center gap-3 rounded-xl border border-green-700/50 bg-green-950/40 px-4 py-3 text-sm text-green-300">
 
-                <button
-                    type="submit"
-                    class="btn btn-outline-danger btn-sm"
-                >
-                    Logout
-                </button>
-            </form>
+                <i
+                    data-lucide="circle-check"
+                    class="h-5 w-5 shrink-0"
+                ></i>
 
-        </div>
-
-    </div>
-
-</nav>
-
-
-<div class="container py-5">
-
-    @if(session('success'))
-
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-
-    @endif
-
-
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-body">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <small class="text-muted">
-                        Nomor Pesanan
-                    </small>
-
-                    <h3 class="fw-bold">
-                        #{{ $order->id }}
-                    </h3>
-
-                </div>
-
-
-                <span class="badge bg-warning text-dark">
-                    {{ ucfirst($order->status) }}
+                <span>
+                    {{ session('success') }}
                 </span>
 
             </div>
 
-            <hr>
+        @endif -->
 
-            <small class="text-muted">
-                Dibuat pada
-            </small>
 
-            <div>
-                {{ $order->created_at->format('d M Y, H:i') }}
-            </div>
+        {{-- PAGE HEADER --}}
+        <div class="mb-8">
+
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-400">
+                Order Details
+            </p>
+
+            <h1 class="mt-1 font-serif text-4xl text-wood-100 md:text-5xl">
+                Detail Pesanan
+            </h1>
+
+            <p class="mt-2 text-sm text-wood-400">
+                Informasi lengkap mengenai pesanan kamu.
+            </p>
 
         </div>
 
-    </div>
+
+        {{-- ORDER INFORMATION --}}
+        <section class="mb-6 overflow-hidden rounded-2xl border border-wood-700 bg-wood-900/85 shadow-shelf-back">
+
+            <div class="border-b border-wood-700 bg-wood-850 px-5 py-5 sm:px-6">
+
+                <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <p class="text-xs uppercase tracking-wider text-wood-500">
+                            Nomor Pesanan
+                        </p>
+
+                        <h2 class="mt-1 font-serif text-3xl text-wood-100">
+                            #{{ $order->id }}
+                        </h2>
+
+                    </div>
 
 
-    <div class="card border-0 shadow-sm">
+                    {{-- STATUS --}}
+                    <div>
 
-        <div class="card-body">
+                        @if($order->status === 'pending')
 
-            <h4 class="fw-bold mb-4">
-                Buku yang Dipesan
-            </h4>
+                            <span class="inline-flex items-center gap-2 rounded-full border border-yellow-700/50 bg-yellow-950/40 px-4 py-2 text-xs font-medium text-yellow-300">
 
+                                <i
+                                    data-lucide="clock-3"
+                                    class="h-4 w-4"
+                                ></i>
 
-            @foreach($order->items as $item)
+                                Menunggu Konfirmasi
 
-                <div class="row align-items-center border-bottom py-3">
+                            </span>
 
-                    <div class="col-3 col-md-2">
+                        @elseif($order->status === 'processing')
 
-                        @if($item->book->cover)
+                            <span class="inline-flex items-center gap-2 rounded-full border border-blue-700/50 bg-blue-950/40 px-4 py-2 text-xs font-medium text-blue-300">
 
-                            <img
-                                src="{{ asset('storage/' . $item->book->cover) }}"
-                                alt="{{ $item->book->title }}"
-                                class="img-fluid rounded"
-                                style="height: 100px; width: 70px; object-fit: cover;"
-                            >
+                                <i
+                                    data-lucide="truck"
+                                    class="h-4 w-4"
+                                ></i>
 
-                        @else
+                                Sedang Diproses
 
-                            <div
-                                class="bg-light rounded d-flex align-items-center justify-content-center"
-                                style="height: 100px; width: 70px;"
-                            >
-                                📖
-                            </div>
+                            </span>
+
+                        @elseif($order->status === 'completed')
+
+                            <span class="inline-flex items-center gap-2 rounded-full border border-green-700/50 bg-green-950/40 px-4 py-2 text-xs font-medium text-green-300">
+
+                                <i
+                                    data-lucide="circle-check"
+                                    class="h-4 w-4"
+                                ></i>
+
+                                Pesanan Selesai
+
+                            </span>
+
+                        @elseif($order->status === 'cancelled')
+
+                            <span class="inline-flex items-center gap-2 rounded-full border border-red-700/50 bg-red-950/40 px-4 py-2 text-xs font-medium text-red-300">
+
+                                <i
+                                    data-lucide="circle-x"
+                                    class="h-4 w-4"
+                                ></i>
+
+                                Pesanan Dibatalkan
+
+                            </span>
 
                         @endif
 
                     </div>
 
+                </div>
 
-                    <div class="col-5 col-md-5">
-
-                        <h6 class="fw-bold mb-1">
-                            {{ $item->book->title }}
-                        </h6>
-
-                        <small class="text-muted">
-                            {{ $item->book->author }}
-                        </small>
-
-                    </div>
+            </div>
 
 
-                    <div class="col-2">
+            <div class="grid gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6">
 
-                        <small class="text-muted">
-                            Qty
-                        </small>
+                <div class="flex items-center gap-3">
 
-                        <div>
-                            {{ $item->quantity }}
-                        </div>
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-wood-850 text-wood-400">
+
+                        <i
+                            data-lucide="calendar"
+                            class="h-5 w-5"
+                        ></i>
 
                     </div>
 
+                    <div>
 
-                    <div class="col-2 text-end">
+                        <p class="text-xs text-wood-500">
+                            Dibuat pada
+                        </p>
 
-                        <small class="text-muted">
-                            Subtotal
-                        </small>
-
-                        <div class="fw-bold text-success">
-                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                        </div>
+                        <p class="mt-1 text-sm font-medium text-wood-200">
+                            {{ $order->created_at->format('d M Y, H:i') }}
+                        </p>
 
                     </div>
 
                 </div>
 
-            @endforeach
 
+                <div class="flex items-center gap-3">
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-wood-850 text-wood-400">
 
-                <span class="fw-bold fs-5">
-                    Total Pesanan
-                </span>
+                        <i
+                            data-lucide="book-open"
+                            class="h-5 w-5"
+                        ></i>
 
-                <span class="fw-bold text-success fs-4">
-                    Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                </span>
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs text-wood-500">
+                            Total Buku
+                        </p>
+
+                        <p class="mt-1 text-sm font-medium text-wood-200">
+                            {{ $order->items->sum('quantity') }} buku
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
+        </section>
+
+
+        {{-- BOOKS --}}
+        <section class="overflow-hidden rounded-2xl border border-wood-700 bg-wood-900/85 shadow-shelf-back">
+
+            <div class="border-b border-wood-700 bg-wood-850 px-5 py-5 sm:px-6">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta-500/10 text-terracotta-400">
+
+                        <i
+                            data-lucide="library"
+                            class="h-5 w-5"
+                        ></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="font-serif text-2xl text-wood-100">
+                            Buku yang Dipesan
+                        </h2>
+
+                        <p class="text-xs text-wood-500">
+                            {{ $order->items->count() }} jenis buku
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="divide-y divide-wood-700">
+
+                @foreach($order->items as $item)
+
+                    <div class="p-5 sm:p-6">
+
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+
+
+                            {{-- COVER --}}
+                            <div class="shrink-0">
+
+                                @if($item->book->cover)
+
+                                    <img
+                                        src="{{ asset('storage/' . $item->book->cover) }}"
+                                        alt="{{ $item->book->title }}"
+                                        class="h-32 w-22 rounded-r-lg rounded-l-md object-cover shadow-book-3d"
+                                    >
+
+                                @else
+
+                                    <div class="flex h-32 w-22 items-center justify-center rounded-r-lg rounded-l-md bg-wood-800 text-wood-400 shadow-book-3d">
+
+                                        <i
+                                            data-lucide="book-open"
+                                            class="h-8 w-8"
+                                        ></i>
+
+                                    </div>
+
+                                @endif
+
+                            </div>
+
+
+                            {{-- BOOK INFO --}}
+                            <div class="min-w-0 flex-1">
+
+                                <h3 class="font-serif text-xl text-wood-100">
+                                    {{ $item->book->title }}
+                                </h3>
+
+                                <p class="mt-1 text-sm text-wood-400">
+                                    {{ $item->book->author }}
+                                </p>
+
+
+                                <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+
+                                    <div>
+
+                                        <p class="text-xs text-wood-500">
+                                            Harga
+                                        </p>
+
+                                        <p class="mt-1 text-sm text-wood-200">
+                                            Rp {{ number_format($item->price, 0, ',', '.') }}
+                                        </p>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <p class="text-xs text-wood-500">
+                                            Quantity
+                                        </p>
+
+                                        <p class="mt-1 text-sm text-wood-200">
+                                            {{ $item->quantity }}
+                                        </p>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <p class="text-xs text-wood-500">
+                                            Subtotal
+                                        </p>
+
+                                        <p class="mt-1 text-sm font-semibold text-terracotta-400">
+                                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+
+            {{-- TOTAL --}}
+            <div class="border-t border-wood-700 bg-wood-850 px-5 py-6 sm:px-6">
+
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <p class="text-sm text-wood-400">
+                            Total Pesanan
+                        </p>
+
+                        <p class="text-xs text-wood-500">
+                            Termasuk seluruh buku dalam pesanan
+                        </p>
+
+                    </div>
+
+
+                    <p class="font-serif text-3xl font-semibold text-terracotta-400">
+                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- BACK BUTTON --}}
+        <div class="mt-6">
+
+            <a
+                href="{{ route('orders.index') }}"
+                class="inline-flex items-center gap-2 rounded-xl border border-wood-700 bg-wood-900 px-5 py-3 text-sm font-medium text-wood-200 transition hover:border-wood-600 hover:bg-wood-800"
+            >
+
+                <i
+                    data-lucide="arrow-left"
+                    class="h-4 w-4"
+                ></i>
+
+                Kembali ke Pesanan Saya
+
+            </a>
+
         </div>
 
-    </div>
+    </main>
 
 </div>
 
-</body>
-</html>
+@endsection

@@ -1,225 +1,326 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.app')
 
-    <title>Keranjang - BookStore</title>
+@section('title', 'Keranjang - BookStore')
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
+@section('content')
 
-<body class="bg-light">
+<div class="relative overflow-hidden">
 
-{{-- Navbar --}}
-<nav class="navbar navbar-expand-lg bg-white border-bottom">
-    <div class="container">
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
 
-        <a class="navbar-brand fw-bold"
-           href="{{ route('home') }}">
-            📚 BookStore
-        </a>
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        <div class="ms-auto d-flex align-items-center gap-2">
+        {{-- Header --}}
+        <div class="mb-8">
 
-            <a href="{{ route('home') }}"
-               class="btn btn-outline-dark btn-sm">
-                ← Kembali Belanja
-            </a>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
-            <form action="{{ route('logout') }}"
-                  method="POST"
-                  class="d-inline">
-                @csrf
+                <div>
 
-                <button
-                    type="submit"
-                    class="btn btn-outline-danger btn-sm">
-                    Logout
-                </button>
-            </form>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-400">
+                        Your Selection
+                    </p>
+
+                    <h1 class="mt-1 font-serif text-4xl text-wood-100 md:text-5xl">
+                        Keranjang Belanja
+                    </h1>
+
+                    <p class="mt-2 text-sm text-wood-400">
+                        Periksa kembali buku yang ingin kamu pesan.
+                    </p>
+
+                </div>
+
+                <a
+                    href="{{ route('home') }}"
+                    class="inline-flex items-center gap-2 self-start rounded-xl border border-wood-700 bg-wood-900 px-5 py-3 text-sm font-medium text-wood-200 transition hover:bg-wood-800 sm:self-auto"
+                >
+                    <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                    Kembali Belanja
+                </a>
+
+            </div>
 
         </div>
 
-    </div>
-</nav>
+<!-- 
+        {{-- Flash Messages --}}
+        @if(session('success'))
+
+            <div class="alert-message mb-6 rounded-2xl border border-green-500/20 bg-green-900/30 px-5 py-4 text-green-200">
+
+                <div class="flex items-center gap-3">
+
+                    <i data-lucide="circle-check" class="h-5 w-5"></i>
+
+                    <span>{{ session('success') }}</span>
+
+                </div>
+
+            </div>
+
+        @endif -->
 
 
-<div class="container py-5">
+        @if(session('error'))
 
-    <div class="mb-4">
-        <h2 class="fw-bold mb-1">
-            Keranjang Belanja
-        </h2>
+            <div class="alert-message mb-6 rounded-2xl border border-red-500/20 bg-red-900/30 px-5 py-4 text-red-200">
 
-        <p class="text-muted mb-0">
-            Periksa kembali buku yang ingin kamu pesan.
-        </p>
-    </div>
+                <div class="flex items-center gap-3">
 
+                    <i data-lucide="circle-alert" class="h-5 w-5"></i>
 
-    {{-- Success Message --}}
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+                    <span>{{ session('error') }}</span>
+
+                </div>
+
+            </div>
+
+        @endif
 
 
-    {{-- Error Message --}}
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+        @if($cart->items->count() > 0)
+
+            @php
+                $total = 0;
+            @endphp
 
 
-    @if($cart->items->count() > 0)
-
-        @php
-            $total = 0;
-        @endphp
-
-        <div class="row g-4">
-
-            {{-- Cart Items --}}
-            <div class="col-lg-8">
-
-                @foreach($cart->items as $item)
-
-                    @php
-                        $subtotal = $item->book->price * $item->quantity;
-                        $total += $subtotal;
-                    @endphp
-
-                    <div class="card border-0 shadow-sm mb-3">
-
-                        <div class="card-body">
-
-                            <div class="row align-items-center g-3">
-
-                                {{-- Cover --}}
-                                <div class="col-4 col-md-2">
-
-                                    @if($item->book->cover)
-
-                                        <img
-                                            src="{{ asset('storage/' . $item->book->cover) }}"
-                                            alt="{{ $item->book->title }}"
-                                            class="img-fluid rounded"
-                                            style="height: 120px; width: 90px; object-fit: cover;"
-                                        >
-
-                                    @else
-
-                                        <div
-                                            class="bg-light rounded d-flex align-items-center justify-content-center"
-                                            style="height: 120px; width: 90px;"
-                                        >
-                                            📖
-                                        </div>
-
-                                    @endif
-
-                                </div>
+            <div class="grid gap-6 lg:grid-cols-[1fr_360px]">
 
 
-                                {{-- Book Info --}}
-                                <div class="col-8 col-md-4">
+                {{-- CART ITEMS --}}
+                <section>
 
-                                    <h5 class="fw-bold mb-1">
-                                        {{ $item->book->title }}
-                                    </h5>
+                    <div class="mb-4 flex items-center justify-between">
 
-                                    <p class="text-muted mb-1">
-                                        {{ $item->book->author }}
-                                    </p>
+                        <div class="flex items-center gap-2 text-wood-300">
 
-                                    <small class="text-muted">
-                                        Rp {{ number_format($item->book->price, 0, ',', '.') }}
-                                        / buku
-                                    </small>
+                            <i data-lucide="shopping-bag" class="h-5 w-5 text-terracotta-400"></i>
 
-                                </div>
+                            <span class="font-medium">
+                                {{ $cart->items->count() }} jenis buku
+                            </span>
+
+                        </div>
+
+                        <span class="text-sm text-wood-500">
+                            {{ $cart->items->sum('quantity') }} item
+                        </span>
+
+                    </div>
 
 
-                                {{-- Quantity --}}
-                                <div class="col-6 col-md-3">
+                    <div class="space-y-4">
 
-                                    <form
-                                        action="{{ route('cart.update', $item) }}"
-                                        method="POST"
-                                    >
+                        @foreach($cart->items as $item)
 
-                                        @csrf
-                                        @method('PUT')
+                            @php
+                                $subtotal = $item->book->price * $item->quantity;
+                                $total += $subtotal;
+                            @endphp
 
-                                        <label class="form-label small text-muted">
-                                            Jumlah
-                                        </label>
 
-                                        <div class="input-group">
+                            <article class="group rounded-2xl border border-wood-700 bg-wood-900/80 p-4 shadow-shelf-back transition hover:border-wood-600">
 
-                                            <input
-                                                type="number"
-                                                name="quantity"
-                                                value="{{ $item->quantity }}"
-                                                min="1"
-                                                max="{{ $item->book->stock }}"
-                                                class="form-control"
+                                <div class="flex flex-col gap-5 sm:flex-row">
+
+
+                                    {{-- COVER --}}
+                                    <div class="shrink-0">
+
+                                        @if($item->book->cover)
+
+                                            <img
+                                                src="{{ asset('storage/' . $item->book->cover) }}"
+                                                alt="{{ $item->book->title }}"
+                                                class="h-36 w-24 rounded-r-lg rounded-l-md object-cover shadow-book-3d"
                                             >
 
-                                            <button
-                                                type="submit"
-                                                class="btn btn-outline-dark"
+                                        @else
+
+                                            <div class="flex h-36 w-24 items-center justify-center rounded-r-lg rounded-l-md bg-wood-800 text-wood-400 shadow-book-3d">
+
+                                                <i
+                                                    data-lucide="book-open"
+                                                    class="h-9 w-9"
+                                                ></i>
+
+                                            </div>
+
+                                        @endif
+
+                                    </div>
+
+
+                                    {{-- BOOK INFO --}}
+                                    <div class="min-w-0 flex-1">
+
+                                        <div class="flex flex-col gap-2 sm:flex-row sm:justify-between">
+
+                                            <div class="min-w-0">
+
+                                                <h2 class="font-serif text-xl leading-6 text-wood-100">
+
+                                                    {{ $item->book->title }}
+
+                                                </h2>
+
+                                                <p class="mt-1 text-sm text-wood-400">
+
+                                                    {{ $item->book->author }}
+
+                                                </p>
+
+                                            </div>
+
+
+                                            {{-- Remove --}}
+                                            <form
+                                                action="{{ route('cart.remove', $item) }}"
+                                                method="POST"
                                             >
-                                                Update
-                                            </button>
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    title="Hapus dari keranjang"
+                                                    class="inline-flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2 text-xs font-medium text-red-400 transition hover:bg-red-500/10"
+                                                >
+
+                                                    <i
+                                                        data-lucide="trash-2"
+                                                        class="h-4 w-4"
+                                                    ></i>
+
+                                                    Hapus
+
+                                                </button>
+
+                                            </form>
 
                                         </div>
 
-                                    </form>
 
-                                </div>
+                                        {{-- Price --}}
+                                        <div class="mt-4">
+
+                                            <p class="text-xs text-wood-500">
+                                                Harga per buku
+                                            </p>
+
+                                            <p class="font-medium text-terracotta-400">
+
+                                                Rp {{ number_format($item->book->price, 0, ',', '.') }}
+
+                                            </p>
+
+                                        </div>
 
 
-                                {{-- Subtotal --}}
-                                <div class="col-6 col-md-2">
+                                        {{-- Bottom --}}
+                                        <div class="mt-5 flex flex-col gap-4 border-t border-wood-700 pt-4 sm:flex-row sm:items-end sm:justify-between">
 
-                                    <small class="text-muted">
-                                        Subtotal
-                                    </small>
 
-                                    <div class="fw-bold text-success">
-                                        Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                            {{-- Quantity --}}
+                                            <form
+                                                action="{{ route('cart.update', $item) }}"
+                                                method="POST"
+                                            >
+
+                                                @csrf
+                                                @method('PUT')
+
+                                                <label
+                                                    class="mb-2 block text-xs font-medium text-wood-400"
+                                                >
+                                                    Jumlah
+                                                </label>
+
+                                                <div class="flex">
+
+                                                    <input
+                                                        type="number"
+                                                        name="quantity"
+                                                        value="{{ $item->quantity }}"
+                                                        min="1"
+                                                        max="{{ $item->book->stock }}"
+                                                        class="bookstore-input w-20 rounded-l-xl px-3 py-2.5 text-center"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="rounded-r-xl border border-l-0 border-wood-600 bg-wood-700 px-4 py-2.5 text-sm font-medium text-wood-200 transition hover:bg-wood-600"
+                                                    >
+                                                        Update
+                                                    </button>
+
+                                                </div>
+
+                                            </form>
+
+
+                                            {{-- Subtotal --}}
+                                            <div class="sm:text-right">
+
+                                                <p class="text-xs text-wood-500">
+                                                    Subtotal
+                                                </p>
+
+                                                <p class="mt-1 text-lg font-semibold text-wood-100">
+
+                                                    Rp {{ number_format($subtotal, 0, ',', '.') }}
+
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
                                 </div>
 
+                            </article>
 
-                                {{-- Remove --}}
-                                <div class="col-12 col-md-1 text-md-end">
+                        @endforeach
 
-                                    <form
-                                        action="{{ route('cart.remove', $item) }}"
-                                        method="POST"
-                                    >
+                    </div>
 
-                                        @csrf
-                                        @method('DELETE')
+                </section>
 
-                                        <button
-                                            type="submit"
-                                            class="btn btn-outline-danger btn-sm"
-                                            title="Hapus"
-                                        >
-                                            🗑️
-                                        </button>
 
-                                    </form>
+                {{-- ORDER SUMMARY --}}
+                <aside>
+
+                    <div class="sticky top-24 overflow-hidden rounded-2xl border border-wood-700 bg-wood-900 shadow-shelf-back">
+
+                        {{-- Header --}}
+                        <div class="border-b border-wood-700 bg-wood-850 px-6 py-5">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta-500/10 text-terracotta-400">
+
+                                    <i
+                                        data-lucide="receipt"
+                                        class="h-5 w-5"
+                                    ></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h2 class="font-serif text-xl text-wood-100">
+                                        Ringkasan Pesanan
+                                    </h2>
+
+                                    <p class="text-xs text-wood-500">
+                                        Detail pembelianmu
+                                    </p>
 
                                 </div>
 
@@ -227,103 +328,137 @@
 
                         </div>
 
+
+                        {{-- Summary Body --}}
+                        <div class="p-6">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-sm text-wood-400">
+                                    Total Item
+                                </span>
+
+                                <span class="font-medium text-wood-100">
+                                    {{ $cart->items->sum('quantity') }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="my-5 h-px bg-wood-700"></div>
+
+
+                            <div class="flex items-end justify-between gap-4">
+
+                                <div>
+
+                                    <p class="text-sm text-wood-400">
+                                        Total Pembayaran
+                                    </p>
+
+                                    <p class="mt-1 text-2xl font-semibold text-terracotta-400">
+
+                                        Rp {{ number_format($total, 0, ',', '.') }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Checkout --}}
+                            <a
+                                href="{{ route('checkout') }}"
+                                class="btn-terracotta mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-semibold"
+                            >
+
+                                <i
+                                    data-lucide="credit-card"
+                                    class="h-5 w-5"
+                                ></i>
+
+                                Checkout / Order
+
+                            </a>
+
+
+                            <p class="mt-3 text-center text-xs leading-5 text-wood-500">
+
+                                Periksa kembali jumlah dan buku sebelum melakukan checkout.
+
+                            </p>
+
+
+                            {{-- Continue Shopping --}}
+                            <a
+                                href="{{ route('home') }}"
+                                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-wood-700 bg-wood-850 px-5 py-3 text-sm font-medium text-wood-200 transition hover:bg-wood-800"
+                            >
+
+                                <i
+                                    data-lucide="book-open"
+                                    class="h-4 w-4"
+                                ></i>
+
+                                Lanjut Belanja
+
+                            </a>
+
+                        </div>
+
                     </div>
 
-                @endforeach
+                </aside>
 
             </div>
 
 
-            {{-- Order Summary --}}
-            <div class="col-lg-4">
+        @else
 
-                <div class="card border-0 shadow-sm">
+            {{-- EMPTY CART --}}
+            <section class="rounded-[2rem] border border-wood-700 bg-wood-900/80 px-6 py-20 text-center shadow-shelf-back">
 
-                    <div class="card-body">
+                <div class="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-wood-800 text-wood-300">
 
-                        <h4 class="fw-bold mb-4">
-                            Ringkasan Pesanan
-                        </h4>
-
-
-                        <div class="d-flex justify-content-between mb-3">
-
-                            <span class="text-muted">
-                                Total Item
-                            </span>
-
-                            <span>
-                                {{ $cart->items->sum('quantity') }}
-                            </span>
-
-                        </div>
-
-
-                        <hr>
-
-
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-
-                            <span class="fw-bold">
-                                Total
-                            </span>
-
-                            <span class="fw-bold text-success fs-5">
-                                Rp {{ number_format($total, 0, ',', '.') }}
-                            </span>
-
-                        </div>
-                        
-
-                        <a href="{{ route('checkout') }}" class="btn btn-dark w-100">
-                            Checkout / Order
-                        </a>
-
-                        <small class="text-muted d-block text-center mt-2">
-                            Fitur order akan tersedia pada tahap berikutnya.
-                        </small>
-
-                    </div>
+                    <i
+                        data-lucide="shopping-cart"
+                        class="h-12 w-12"
+                    ></i>
 
                 </div>
 
-            </div>
-
-        </div>
-
-    @else
-
-        {{-- Empty Cart --}}
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body text-center py-5">
-
-                <div class="display-1 mb-3">
-                    🛒
-                </div>
-
-                <h3 class="fw-bold">
+                <h2 class="mt-7 font-serif text-3xl text-wood-100">
                     Keranjang Masih Kosong
-                </h3>
+                </h2>
 
-                <p class="text-muted mb-4">
+                <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-wood-400">
+
                     Belum ada buku yang kamu tambahkan ke keranjang.
+                    Yuk, cari bacaan yang menarik untuk menemani harimu.
+
                 </p>
 
                 <a
                     href="{{ route('home') }}"
-                    class="btn btn-dark"
+                    class="btn-terracotta mt-7 inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
                 >
+
+                    <i
+                        data-lucide="book-open"
+                        class="h-5 w-5"
+                    ></i>
+
                     Mulai Belanja
+
                 </a>
 
-            </div>
+            </section>
 
-        </div>
+        @endif
 
-    @endif
+    </main>
 
 </div>
 
-</body>
-</html>
+@endsection
