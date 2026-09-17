@@ -9,11 +9,9 @@
 <div class="space-y-6">
 
     {{-- HEADER --}}
-
     <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
 
         <div>
-
             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-400">
                 Catalog
             </p>
@@ -25,29 +23,24 @@
             <p class="mt-2 text-sm text-wood-400">
                 Tambahkan, ubah, atau hapus data buku BookStore.
             </p>
-
         </div>
-
 
         <a
             href="{{ route('books.create') }}"
             class="admin-primary"
         >
-
             <i
                 data-lucide="plus"
                 class="h-4 w-4"
             ></i>
 
             Tambah Buku
-
         </a>
 
     </div>
 
 
-    {{-- FLASH ERROR --}}
-
+    {{-- VALIDATION ERROR --}}
     @if($errors->any())
 
         <div
@@ -74,7 +67,6 @@
 
             </div>
 
-
             <ul class="mt-2 list-disc space-y-1 pl-5">
 
                 @foreach($errors->all() as $error)
@@ -93,12 +85,9 @@
 
 
     {{-- TABLE CARD --}}
-
     <div class="admin-card overflow-hidden rounded-2xl">
 
-
         {{-- TABLE HEADER --}}
-
         <div
             class="
                 flex
@@ -126,6 +115,7 @@
             </div>
 
 
+            {{-- SEARCH --}}
             <div class="relative w-full md:w-72">
 
                 <i
@@ -155,10 +145,12 @@
 
 
         {{-- TABLE --}}
-
         <div class="overflow-x-auto">
 
-            <table class="admin-table" id="bookTable">
+            <table
+                class="admin-table"
+                id="bookTable"
+            >
 
                 <thead>
 
@@ -199,9 +191,7 @@
 
                         <tr>
 
-
                             {{-- BOOK --}}
-
                             <td>
 
                                 <div class="flex items-center gap-3">
@@ -278,7 +268,6 @@
 
 
                             {{-- CATEGORY --}}
-
                             <td>
 
                                 <span
@@ -294,16 +283,13 @@
                                         text-wood-300
                                     "
                                 >
-
                                     {{ $book->category->name ?? '-' }}
-
                                 </span>
 
                             </td>
 
 
                             {{-- AUTHOR --}}
-
                             <td>
 
                                 <span class="text-wood-300">
@@ -314,21 +300,16 @@
 
 
                             {{-- PRICE --}}
-
                             <td>
 
                                 <span class="font-semibold text-amberlight">
-
-                                    Rp
-                                    {{ number_format($book->price, 0, ',', '.') }}
-
+                                    Rp {{ number_format($book->price, 0, ',', '.') }}
                                 </span>
 
                             </td>
 
 
                             {{-- STOCK --}}
-
                             <td>
 
                                 @if($book->stock > 10)
@@ -355,16 +336,13 @@
 
 
                             {{-- ACTION --}}
-
                             <td>
 
                                 <div class="flex justify-end gap-2">
 
-
                                     {{-- DETAIL --}}
-
                                     <a
-                                        href="{{ route('book.detail', $book) }}"
+                                        href="{{ route('book.detail', $book) }}?from=admin"
                                         target="_blank"
                                         class="
                                             inline-flex
@@ -393,7 +371,6 @@
 
 
                                     {{-- EDIT --}}
-
                                     <a
                                         href="{{ route('books.edit', $book) }}"
                                         class="
@@ -422,7 +399,6 @@
 
 
                                     {{-- DELETE --}}
-
                                     <form
                                         action="{{ route('books.destroy', $book) }}"
                                         method="POST"
@@ -540,41 +516,36 @@
 
 
 {{-- SEARCH --}}
-
 @push('scripts')
 
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        const searchInput =
-            document.getElementById('bookSearch');
+        const searchInput = document.getElementById('bookSearch');
 
-        const rows =
-            document.querySelectorAll('#bookTable tbody tr');
-
+        const rows = document.querySelectorAll(
+            '#bookTable tbody tr'
+        );
 
         if (!searchInput) {
             return;
         }
 
-
         searchInput.addEventListener('input', function () {
 
-            const keyword =
-                this.value.toLowerCase().trim();
-
+            const keyword = this.value
+                .toLowerCase()
+                .trim();
 
             rows.forEach(function (row) {
 
-                const text =
-                    row.textContent.toLowerCase();
+                const text = row.textContent
+                    .toLowerCase();
 
-
-                row.style.display =
-                    text.includes(keyword)
-                        ? ''
-                        : 'none';
+                row.style.display = text.includes(keyword)
+                    ? ''
+                    : 'none';
 
             });
 

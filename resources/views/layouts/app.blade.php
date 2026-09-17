@@ -4,15 +4,16 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@yield('title', 'BookStore')</title>
 
-
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
     {{-- GOOGLE FONTS --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link
         rel="preconnect"
         href="https://fonts.gstatic.com"
@@ -42,11 +43,8 @@
 
     {{-- TAILWIND CONFIG --}}
     <script>
-
         tailwind.config = {
-
             theme: {
-
                 extend: {
 
                     colors: {
@@ -71,7 +69,6 @@
                         },
 
                         amberlight: '#ffdf9e',
-
                     },
 
 
@@ -101,11 +98,8 @@
                     }
 
                 }
-
             }
-
         };
-
     </script>
 
 
@@ -123,11 +117,8 @@
 
 
         body {
-
             background-color: #150d09;
-
             color: #f5ebe2;
-
             font-family: "Plus Jakarta Sans", sans-serif;
 
             background-image:
@@ -151,7 +142,6 @@
                     #2b1a12 0%,
                     #1a0f0a 100%
                 );
-
         }
 
 
@@ -183,46 +173,35 @@
         /* NAVBAR */
 
         .glass-nav {
-
             background: rgba(21, 13, 9, 0.92);
-
             backdrop-filter: blur(14px);
-
             -webkit-backdrop-filter: blur(14px);
-
         }
 
 
         /* BOOK CARD */
 
         .book-card {
-
             transition:
                 transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                 box-shadow 0.3s ease;
-
         }
 
-
         .book-card:hover {
-
             transform:
                 translateY(-8px)
                 scale(1.025);
 
             z-index: 10;
-
         }
 
 
         /* SHELF */
 
         .shelf-plank {
-
             height: 24px;
 
             background:
-
                 linear-gradient(
                     180deg,
                     #744b30 0%,
@@ -232,30 +211,22 @@
                 );
 
             border-top: 2px solid #a26d48;
-
             border-bottom: 3px solid #0f0703;
 
             box-shadow:
-
                 0 15px 20px rgba(0,0,0,.7),
-
                 inset 0 2px 4px rgba(255,230,190,.2);
-
         }
 
 
         /* WARM LIGHT */
 
         .warm-light {
-
             width: 7px;
-
             height: 10px;
-
             display: inline-block;
 
             background:
-
                 radial-gradient(
                     circle at 40% 30%,
                     #ffffff,
@@ -266,42 +237,31 @@
             border-radius: 50%;
 
             box-shadow:
-
                 0 0 10px 3px rgba(255,210,130,.85),
-
                 0 0 20px 6px rgba(240,140,40,.4);
-
         }
 
 
         /* ALERT */
 
         .alert-message {
-
             animation:
                 slideDown
                 .35s
                 ease-out;
-
         }
 
 
         @keyframes slideDown {
 
             from {
-
                 opacity: 0;
-
                 transform: translateY(-10px);
-
             }
 
             to {
-
                 opacity: 1;
-
                 transform: translateY(0);
-
             }
 
         }
@@ -312,11 +272,9 @@
         @media (max-width: 640px) {
 
             .book-card:hover {
-
                 transform:
                     translateY(-4px)
                     scale(1.01);
-
             }
 
         }
@@ -353,10 +311,17 @@
                 >
 
                     <div
-                        class="flex h-10 w-10 items-center justify-center rounded-xl
-                               bg-gradient-to-br from-terracotta-400 to-terracotta-600
-                               shadow-lg shadow-terracotta-600/20
-                               transition group-hover:scale-105"
+                        class="
+                            flex h-10 w-10 items-center justify-center
+                            rounded-xl
+                            bg-gradient-to-br
+                            from-terracotta-400
+                            to-terracotta-600
+                            shadow-lg
+                            shadow-terracotta-600/20
+                            transition
+                            group-hover:scale-105
+                        "
                     >
 
                         <i
@@ -370,13 +335,25 @@
                     <div>
 
                         <h1
-                            class="font-serif text-2xl font-bold leading-none text-amber-50"
+                            class="
+                                font-serif
+                                text-2xl
+                                font-bold
+                                leading-none
+                                text-amber-50
+                            "
                         >
                             BookStore
                         </h1>
 
                         <p
-                            class="mt-1 text-[10px] uppercase tracking-widest text-wood-400"
+                            class="
+                                mt-1
+                                text-[10px]
+                                uppercase
+                                tracking-widest
+                                text-wood-400
+                            "
                         >
                             Find your next story
                         </p>
@@ -392,12 +369,18 @@
 
                 <nav class="hidden items-center gap-1 md:flex">
 
+
                     {{-- HOME --}}
 
                     <a
                         href="{{ route('home') }}"
                         class="
-                            rounded-full px-4 py-2 text-sm transition
+                            rounded-full
+                            px-4
+                            py-2
+                            text-sm
+                            transition
+
                             {{ request()->routeIs('home')
                                 ? 'border border-amber-600/30 bg-wood-800 text-amber-200'
                                 : 'text-wood-300 hover:bg-wood-800 hover:text-amber-100'
@@ -413,7 +396,12 @@
                     <a
                         href="{{ route('about') }}"
                         class="
-                            rounded-full px-4 py-2 text-sm transition
+                            rounded-full
+                            px-4
+                            py-2
+                            text-sm
+                            transition
+
                             {{ request()->routeIs('about')
                                 ? 'border border-amber-600/30 bg-wood-800 text-amber-200'
                                 : 'text-wood-300 hover:bg-wood-800 hover:text-amber-100'
@@ -425,22 +413,28 @@
 
 
                     {{-- CONTACT --}}
-                    @auth
+                    {{-- Contact dapat diakses sebelum dan sesudah login --}}
 
-                        <a
-                            href="{{ route('contact') }}"
-                            class="
-                                rounded-full px-4 py-2 text-sm transition
-                                {{ request()->routeIs('contact')
-                                    ? 'border border-amber-600/30 bg-wood-800 text-amber-200'
-                                    : 'text-wood-300 hover:bg-wood-800 hover:text-amber-100'
-                                }}
-                            "
-                        >
-                            Contact
-                        </a>
+                    <a
+                        href="{{ route('contact') }}"
+                        class="
+                            rounded-full
+                            px-4
+                            py-2
+                            text-sm
+                            transition
 
-                    @endauth
+                            {{ request()->routeIs('contact')
+                                ? 'border border-amber-600/30 bg-wood-800 text-amber-200'
+                                : 'text-wood-300 hover:bg-wood-800 hover:text-amber-100'
+                            }}
+                        "
+                    >
+                        Contact
+                    </a>
+
+
+                  
 
                 </nav>
 
@@ -486,14 +480,17 @@
 
                         {{-- ORDERS --}}
 
-                        <a
+                       <a
                             href="{{ route('orders.index') }}"
                             class="
-                                hidden items-center gap-2
+                                hidden
+                                items-center
+                                gap-2
                                 rounded-full
                                 border border-wood-700/60
                                 bg-wood-900/80
-                                px-3 py-2
+                                px-3
+                                py-2
                                 text-sm
                                 text-wood-300
                                 transition
@@ -502,14 +499,12 @@
                                 sm:flex
                             "
                         >
-
                             <i
                                 data-lucide="package"
                                 class="h-4 w-4"
                             ></i>
 
                             Orders
-
                         </a>
 
 
@@ -517,8 +512,12 @@
 
                         <div
                             class="
-                                ml-2 hidden items-center gap-2
-                                border-l border-wood-800
+                                ml-2
+                                hidden
+                                items-center
+                                gap-2
+                                border-l
+                                border-wood-800
                                 pl-3
                                 sm:flex
                             "
@@ -526,9 +525,14 @@
 
                             <div
                                 class="
-                                    flex h-9 w-9 items-center justify-center
+                                    flex
+                                    h-9
+                                    w-9
+                                    items-center
+                                    justify-center
                                     rounded-full
-                                    border border-wood-500/50
+                                    border
+                                    border-wood-500/50
                                     bg-wood-700
                                 "
                             >
@@ -544,7 +548,11 @@
                             <div class="hidden lg:block">
 
                                 <p
-                                    class="text-xs font-semibold text-wood-100"
+                                    class="
+                                        text-xs
+                                        font-semibold
+                                        text-wood-100
+                                    "
                                 >
                                     {{ auth()->user()->name }}
                                 </p>
@@ -608,12 +616,15 @@
                         <a
                             href="{{ route('login') }}"
                             class="
-                                inline-flex items-center gap-2
+                                inline-flex
+                                items-center
+                                gap-2
                                 rounded-full
                                 bg-gradient-to-br
                                 from-terracotta-400
                                 to-terracotta-600
-                                px-5 py-2.5
+                                px-5
+                                py-2.5
                                 text-sm
                                 font-semibold
                                 text-white
@@ -633,7 +644,6 @@
                             Login
 
                         </a>
-
 
                     @endauth
 
@@ -660,11 +670,15 @@
             <div
                 class="
                     alert-message
-                    flex items-center gap-3
+                    flex
+                    items-center
+                    gap-3
                     rounded-xl
-                    border border-emerald-500/20
+                    border
+                    border-emerald-500/20
                     bg-emerald-500/10
-                    px-4 py-3
+                    px-4
+                    py-3
                     text-sm
                     text-emerald-300
                 "
@@ -691,11 +705,15 @@
             <div
                 class="
                     alert-message
-                    flex items-center gap-3
+                    flex
+                    items-center
+                    gap-3
                     rounded-xl
-                    border border-red-500/20
+                    border
+                    border-red-500/20
                     bg-red-500/10
-                    px-4 py-3
+                    px-4
+                    py-3
                     text-sm
                     text-red-300
                 "
@@ -738,7 +756,8 @@
 
             <div
                 class="
-                    flex flex-col
+                    flex
+                    flex-col
                     items-center
                     justify-between
                     gap-4
@@ -746,24 +765,73 @@
                 "
             >
 
+
                 {{-- BRAND --}}
 
                 <div class="text-center md:text-left">
 
                     <p
-                        class="font-serif text-lg text-amber-100"
+                        class="
+                            font-serif
+                            text-lg
+                            text-amber-100
+                        "
                     >
                         BookStore
                     </p>
 
                     <p
-                        class="mt-1 text-xs text-wood-500"
+                        class="
+                            mt-1
+                            text-xs
+                            text-wood-500
+                        "
                     >
                         A cozy place to find your next story.
                     </p>
 
                 </div>
+<div>
+   
 
+    {{-- Social Media --}}
+  <div class="mt-5 flex items-center gap-3">
+
+    {{-- Instagram --}}
+    <a
+        href="https://www.instagram.com/diarynoctanibal/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex h-9 w-9 items-center justify-center rounded-full border border-[#67422b]/60 bg-[#2a1a12] text-[#dfc2a6] transition duration-300 hover:-translate-y-1 hover:border-[#e57a53] hover:bg-[#382216] hover:text-[#e57a53]"
+        title="Instagram"
+    >
+        <i class="fa-brands fa-instagram text-base"></i>
+    </a>
+
+    {{-- LinkedIn --}}
+    <a
+        href="www.linkedin.com/in/nabil-radika/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex h-9 w-9 items-center justify-center rounded-full border border-[#67422b]/60 bg-[#2a1a12] text-[#dfc2a6] transition duration-300 hover:-translate-y-1 hover:border-[#e57a53] hover:bg-[#382216] hover:text-[#e57a53]"
+        title="LinkedIn"
+    >
+        <i class="fa-brands fa-linkedin-in text-base"></i>
+    </a>
+
+    {{-- Facebook --}}
+    <a
+        href="https://www.facebook.com/nabilradika.aprianor/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex h-9 w-9 items-center justify-center rounded-full border border-[#67422b]/60 bg-[#2a1a12] text-[#dfc2a6] transition duration-300 hover:-translate-y-1 hover:border-[#e57a53] hover:bg-[#382216] hover:text-[#e57a53]"
+        title="Facebook"
+    >
+        <i class="fa-brands fa-facebook-f text-base"></i>
+    </a>
+
+</div>
+</div>  
 
                 {{-- COPYRIGHT --}}
 
